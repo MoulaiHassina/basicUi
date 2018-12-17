@@ -1,30 +1,96 @@
 from PyQt5 import QtWidgets
-from PyQt5 import QtGui
-from PyQt5 import QtCore
 
+from PyQt5.QtGui import QPixmap
+import arabic_reshaper
+import matplotlib.pyplot as plt
+
+from bidi.algorithm import get_display
 
 import main
-listperiod=["العصر العباسي", "العصر الاسلامي","العصر الجاهلي","العصر الاموي","العصر  الحديث"]
+listperiod=['العصر الاموي','العصر العباسي', 'العصر الاسلامي','العصر الجاهلي','العصر الاموي','العصر  الحديث']
 listgenre=["دين","سياسة","أدب"]
+plt.style.use('dark_background')
+from pyqtgraph.Qt import QtCore, QtGui
+
+
 
 class MyFileBrowser(main.Ui_MainWindow, QtWidgets.QMainWindow):
     def __init__(self, maya=False):
         super(MyFileBrowser, self).__init__()
         self.setupUi(self)
         self.maya = maya
+
         self.treeView.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.treeView.customContextMenuRequested.connect(self.context_menu)
         self.populate()
+
         self.fill_choice_box_genre(listgenre)
         self.fill_choice_box_period(listperiod)
         #listener for combo box
         self.genre.currentTextChanged.connect(self.get_genre_selected)
         self.period.currentTextChanged.connect(self.get_period_selected)
+#        colonne=self.graphicsView.height()
+ #       ligne=self.graphicsView.width()
+  #      self.graphicsView = pg.PlotWidget(self.graphicsView)
+   #     self.graphicsView.setFixedWidth(ligne)
+    #    self.graphicsView.setFixedHeight(colonne)
+
         #text of word selected
         #self.wordtext.textChanged.connect(self.get_text_word)
         self.checkword.clicked.connect(self.get_text_word)
         self.insertmeaning.clicked.connect(self.insertintomeanings)
+
         self.insertexample.clicked.connect(self.insertintoexamples)
+        self.listmeaning.clicked.connect(self.modifycolumnonmeanings)
+
+        self.Lookstat.clicked.connect(self.plot)
+        # Plot widget postion
+
+
+    def plot(self):
+
+
+
+
+        reshaped_text = arabic_reshaper.reshape(u'اللغة العربية رائعة')
+
+        period=[ (get_display(arabic_reshaper.reshape(word))) for word in listperiod ]
+        genres=[ (get_display(arabic_reshaper.reshape(word))) for word in listgenre]
+
+        self.completed = 0
+
+        while self.completed < 100:
+            self.completed += 0.001
+            self.progressBar.setValue(self.completed)
+
+        #remplir avec backend values
+
+        frequenceP=[1,2,3,4,5,6]
+        frequenceG=[1,2,3]
+        #   self.plot()
+        plt.bar(period, frequenceP, label=self.word_stat.text(), color='orange')
+        plt.legend()
+        plt.xlabel('periodes')
+        plt.ylabel('frequence')
+
+        plt.title('Frequence de mot via period')
+        plt.savefig('testy.png', dpi=100)
+        pixmap = QPixmap('testy.png')
+        self.barchartPeriod.setPixmap(pixmap)
+        self.resize(pixmap.width(), pixmap.height())
+        plt.close()
+
+        plt.bar(genres, frequenceG, label=self.word_stat.text(), color='r')
+        plt.legend()
+        plt.xlabel('genre')
+        plt.ylabel('frequence')
+
+        plt.title('Frequence de mot via genre')
+        plt.savefig('testy2.png', dpi=100)
+        pixmap = QPixmap('testy2.png')
+        self.barchartGenre.setPixmap(pixmap)
+        self.resize(pixmap.width(), pixmap.height())
+        plt.close()
 
     def insertintoexamples(self):
         examplesadded=self.modifyexample.text()
@@ -64,8 +130,6 @@ class MyFileBrowser(main.Ui_MainWindow, QtWidgets.QMainWindow):
         menu = QtWidgets.QMenu()
         open = menu.addAction("عرض النص")
         open.triggered.connect(self.open_file)
-
-
         cursor = QtGui.QCursor()
         menu.exec_(cursor.pos())
 
@@ -99,6 +163,10 @@ class MyFileBrowser(main.Ui_MainWindow, QtWidgets.QMainWindow):
         return self.period.currentText()
 
 
+    def modifycolumnonmeanings(self):
+        corner =self.listmeaning.cellEntered()
+        print("hhh")
+        return corner
 
 
     def lanch_search(self,word,genre,period):

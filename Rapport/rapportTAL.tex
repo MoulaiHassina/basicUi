@@ -1,0 +1,533 @@
+\documentclass[12pt,a4paper,oneside]{book} 
+
+\usepackage[utf8]{inputenc} 
+\usepackage[english]{babel}
+
+	\makeatletter
+	\newcommand\thefontsize[1]{{}}
+	\makeatother
+	\usepackage{enumitem}
+	\usepackage{varwidth}
+	\usepackage{graphicx}
+	\usepackage{caption}
+
+	
+
+
+	
+\usepackage[top=2.5cm, bottom=3cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[titletoc,title]{appendix}
+\usepackage[linewidth=1pt]{mdframed}
+\usepackage{framed}
+\usepackage{listings}
+\usepackage{smartdiagram}
+\usepackage{smartdiagram}
+\usepackage{varwidth}
+\usepackage{amsmath}
+
+
+
+\usesmartdiagramlibrary{additions}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	frame=L,
+	xleftmargin=\parindent,
+	language=C,
+	showstringspaces=false,
+	basicstyle=\footnotesize\ttfamily,
+	keywordstyle=\bfseries\color{green!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{blue},
+	stringstyle=\color{orange},
+}
+
+
+\lstset{escapechar=@,style=customc}
+
+\lstset{
+	literate=%
+	{à}{{\'a}}1
+	{í}{{\'i}}1
+	{é}{{\'e}}1
+	{è}{{\`e}}1
+	{ý}{{\'y}}1
+	{ú}{{\'u}}1
+	{ó}{{\'o}}1
+	{ě}{{\v{e}}}1
+	{š}{{\v{s}}}1
+	{č}{{\v{c}}}1
+	{ř}{{\v{r}}}1
+	{ž}{{\v{z}}}1
+	{ď}{{\v{d}}}1
+	{ť}{{\v{t}}}1
+	{ň}{{\v{n}}}1
+	{ů}{{\r{u}}}1
+	{Á}{{\'A}}1
+	{Í}{{\'I}}1
+	{É}{{\'E}}1
+	{Ý}{{\'Y}}1
+	{Ú}{{\'U}}1
+	{Ó}{{\'O}}1
+	{Ě}{{\v{E}}}1
+	{Š}{{\v{S}}}1
+	{Č}{{\v{C}}}1
+	{Ř}{{\v{R}}}1
+	{Ž}{{\v{Z}}}1
+	{Ď}{{\v{D}}}1
+	{Ť}{{\v{T}}}1
+	{Ň}{{\v{N}}}1
+	{Ů}{{\r{U}}}1
+}
+\usepackage{booktabs,makecell,tabularx}
+
+\renewcommand\theadfont{\small}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\usepackage{siunitx}
+\usepackage{adjustbox}
+\usepackage{array,booktabs}
+
+\usepackage{graphicx}
+\usepackage{epstopdf}
+
+%\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\usepackage{algorithm}% http://ctan.org/pkg/algorithms
+\usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
+\usepackage{amsmath}
+\begin{document}
+	
+		\def\reportnumber{}
+		\def\reporttitle{TALN}
+		\input{front_page}
+		
+		
+		\sffamily
+		
+		\setcounter{tocdepth}{3}
+		\tableofcontents
+		\newpage
+
+\chapter{}
+
+\chapter*{Introduction}
+
+\vspace{-1cm}
+[8 a 10 lignes]
+\section*{Problématique}
+\vspace{0.5cm}
+[travail demandé dans l'énoncé]
+
+\newpage
+
+
+
+\chapter*{Description du système globale}
+\vspace{-1.3cm}
+\section{Description des étapes}
+Comme le montre le schéma du fonctionnement de notre système ci-dessous, la création de notre dictionnaire historique c'est fait en plusieurs étapes:\\
+\begin{enumerate}
+	\item[$\bullet$] \textbf{Récolte de ressources :} Recherche des ressources fiable, en se basant sur un processus automatisé pour aspirer des sites à partir d'URLs et un processus de téléchargement de PDFs de manière automatique.\\
+	\item[$\bullet$] \textbf{Nettoyage :} Extraction de contenu utile des résultats de la recherche obtenu lors de l'étape précédente, cela en utilisant \textit{BeautifullSoup} pour les sites aspirés et \textit{Textract} pour les PDFs téléchargés.\\
+	\item[$\bullet$] \textbf{Organisation automatique du Corpus :}  génération et organisation automatique de nos fichiers (contenant les textes nettoyés) par périodes et genres.
+	\begin{enumerate}
+		\item[-] \textbf{Par période :} en exploitant les méta-données contenu dans les sites et PDF tel que le nom de l'auteur, qui nous permet d'obtenir sa date de naissance / mort via \textit{l'API de wikipédia} et ainsi de le classé dans une période précise.
+		\item[-] \textbf{Par genre :} en utilisant un modèle de la RI (le \textit{modèle vectoriel}) ainsi que le champ lexical des genres sélectionnés.
+	\end{enumerate}
+	\item[$\bullet$] \textbf{Génération du corpus XML :} cela est effectué en passant chacun de nos textes par un module de découpage en phrase basé sur les expressions régulière, puis exploitant le résultat de celle-ci pour remplir nos fichiers .xml de nos phrase baisées (pour l'insertion de balise nous avons utilisé \textit{xml.etree.ElementTree}).\\	
+	\item[$\bullet$] \textbf{Exploitation de la BDD offline de Al Maany :} après téléchargement de l'application \textit{Al Maany} (en \textit{.apk}) nous y trouvant la base de donnée des mots/ sens, que nous récupérant de manière structuré pour une utilisation dans les étapes suivantes.\\	
+	\item[$\bullet$]  \textbf{Construction de dictionnaire historique XML :} A partir du corpus balisé, de fonction de stemming (basé sur \textit{ISRIStemmer}), d'étiqueteur POS (\textit{Stanford POSTagger}) ainsi que quelque fonctions de normalisation et tokenization (\textit{pyarabic}) dédiés à la langue arabe et enfin des données extraites de la BDD de \textit{Al Maany} offline, nous remplissons notre dictionnaires historique, celui-ci constitué de 28 dictionnaires XML (1 par lettre alphabétique).\\	
+	\item[$\bullet$] \textbf{Enrichissement du dictionnaire historique:} afin de continuellement enrichir notre dictionnaire historique, nous avons deux méthodes possibles:
+	\begin{enumerate}
+		\item[-] \textbf{Mode Online :} Extraire des exemples d'utilisation du site Al Maany et les proposer au lexicographe. pour cela il s'agit de répéter les étapes 1 et 2 dédiées aux URLs.
+		\item[-] \textbf{Mode Offline :} Permettre la mise à jour manuelle d'entrée dans le dictionnaire.
+	\end{enumerate}
+	
+\end{enumerate}
+
+%\vspace{-0.2cm}
+\section{Schéma résumant le système}
+\vspace{-0.5cm}
+\begin{center}
+	\includegraphics[width=1\textwidth]{images/tal2.jpg}%
+	\captionof{figure}{Schéma de fonctionnement de notre système.}\label{labelname}%
+\end{center}
+
+\begin{center}
+	\includegraphics[width=1\textwidth]{images/tal_suite.jpg}%
+
+\end{center}
+
+
+
+\newpage
+\chapter{Définition des périodes et genres}
+\section{Présentation de la langue arabe}
+[jess]\\
+\section{Histoire de la langue arabe}
+[jess]
+[citer les source de jess et de naila pour justifier nos périodes]
+\section{Liste des périodes retenues}
+[jess]
+[nom de la période:interval de temps en miladi : intervale de temps en hdjri : quelques auteurs a titre d'exemple ]
+\section{Liste des genres retenus}
+[naila]\\
+Vu les évènements marquants des différentes période précédemment citées et en tenant compte des genres dominants nous avons sélectionné 3 genres pour classer nos textes et poèmes de chaque période,
+Ces genres sont :
+\begin{center}
+ \textbf{Politique} $\Leftrightarrow$ \AR{سياسة} \\
+ \textbf{Religion} $\Leftrightarrow$ \AR{دين}\\
+ \textbf{Littérature} $\Leftrightarrow$ \AR{أدب}\\
+\end{center}
+
+
+\chapter{Extraction et nettoyage de texte arabe}
+\section{Extraction et nettoyage à partir de lien}
+\subsection{Description de la méthode}
+%[3abiriiiii binomatiii ]\\
+%methode existante -> probleme rencontré -> methode choisie
+l'Extraction d'information à partir des sites webs est une pratique trés courante de nous jour selon de le besoin
+, on peut ,par exemple ,vouloir recuperer un article de journal
+et on aimerai bien cibler que le contenu de l'article .
+
+
+On se confronte alors face à un problème les pages webs sont generalement  bourrées de ce que appelera déchets , par déchets on veut dire  tout ce qui est different de notre cible qui est le contenu de l'article comme:
+
+du code javascript , du text des pubs , les balises html ...
+
+
+\textbf{Solution:}
+
+Pour palier à cette problèmatique on  a exploité des librairies qui existent permettant de \textit{nettoyer au maximum} la page web qu'on desire aspirer.(Beautiful Soup sous python vu en tp)
+
+\subsection{Fonctionnement}
+Differentes approches peuvent appliquer tel que:
+\begin{itemize}
+	\item Combiner BeautifulSoup avec des expressions régulières
+	\item Expressions régulières seulement
+	\item BeautifulSoup seulement
+\end{itemize} 
+Il est primordiale de noter que pour aspirer une page web et  cibler un certain contenu il faut connaitre et etudier le code source de cette derniere avec une certaine precision .
+
+\subsubsection{Technique choisie}
+On a essayé d'éviter les expressions régulières car Beautiful soup offre assez d'outils qui permettent de faire un nettoyage presque parfait .
+\begin{itemize}
+	\item Nettoyage en  supprimant le contenu des balises Script et style
+	\item Recuperation du texte arabe seulement en utilisant une expression régulière
+	\item Analyse de la sortie des deux premieres étapes puis application de split et contains pour bornée le texte voulu
+\end{itemize}
+\section{Extraction et nettoyage à partir de PDF/text}
+\subsection{Description de la méthode}
+[%soso est sur la piste ]\\
+%methode existante -> probleme rencontré -> methode choisie
+À côté de l'extraction de textes à partir de liens, il a fallu élargir nos sources de données pour un corpus plus riche. Nous avons donc téléchargé des documents PDF et nous sommes passés à l'extraction du contenu de ces derniers.
+Pour notre application nous avons choisi de construire deux instances du corpus, une instance sous forme de fichiers texte et une seconde instance sous forme de fichiers XML. Nous justifions notre choix par les raisons suivantes :
+\begin{itemize}
+	\item Permettre à l’utilisateur de naviguer plus rapidement dans le corpus.
+	\item  Gagner du temps lors de l’affichage du contenu du corpus en évitant les traitements sur les fichiers XML.
+	\item Permettre d’utiliser le corpus en dehors des limites du projet, en effet il sera plus simple de manipuler des fichiers texte que des fichiers XML.
+\end{itemize}
+\textbf{Problématique:}
+
+À travers nos tests, nous avons compris qu'il était impossible (vu la durée limitée que nous avons) d'extraire du contenu de documents PDF qui contiennent plus que du texte uniquement (tel que le \textbf{Qoran} par exemple).
+
+\subsection{Fonctionnement}
+%[soso est sur la piste ]
+Pour cette extraction, notre choix s'est vite portée sur le package \textbf{Textract}. 
+
+ Avant de passer à l’utilisation de ce package, il faudra bien sûr télécharger les fichiers PDF dont on veut extraire le contenu. pour cela il suffit de lir ele contenu d’une URL et d'écrire le résultat dans un fichier en output. Plusieurs packages en Python peuvent être utilisés, dans notre cas nous avons utilisé \textbf{urllib}.
+ 
+Pour ce qui de \textbf{Textract} son utilisation est des plus simples,  elle consiste à envoyer en paramètre à la méthode \textbf{process} le chemin de notre document PDF, l’encodage du fichier qui sera en \textbf{UTF-8} dans notre cas et plus important la méthode utilisée pour lire le document, dans notre cas \textbf{pdfminer} comme suit : 
+\begin{figure}[H]
+	\includegraphics[width=1\textwidth]{images/pdfextract.png}%
+	\captionof{figure}{l'appel de fonction}\label{labelname}%
+\end{figure}
+
+\chapter{Découpage de texte arabe en phrases}
+\subsection{Description de la méthode}
+[jess laki al khat]\\
+methode existante -> probleme rencontré -> methode choisie
+\subsection{Fonctionnement}
+[jess laki al khat]
+
+\chapter{Organisation automatique du corpus}
+
+\section{Organisation par période}
+\subsection{période contenue dans la source}
+Pour certain sites aspirés (Diwan) les poèmes étaient organisées par auteur et par periodes , donc il était assez simple de les classer en récuperant l'information (periodes,auteur) à chaque fois.
+\subsection{période à extraire à partir de méta-data des textes}
+%[sinou comme pour hikam avec l'api de wiki]
+Tous les sites n'offre pas le luxe de l'information sur la periode de leurs textes (poèmes ,textes narratifs ...).Il a fallu donc trouver une solution pour remédier à ce problème .
+On peut résumer ce qu'on a proposé dans les points suivants:
+\begin{itemize}
+	\item Extraction du nom de l'auteur du texte ou poème d'un site aspirer (hikam , diwan)
+	\item Recherche des méta-données , année de naissance , année de décés lancée sur WIKIPEDIA.
+	\item Extraction de la periode selon la date de naissance et déces de l'auteur (exemple : en moyenne un auteur commence à écrire à partir de 30 ans si il est né en 690 alors on aura 720 et classifera la date résultante selon notre decoupage de periode )
+	
+\end{itemize}
+
+\section{Organisation par genre}
+
+Maintenant que chaque texte et poème de notre corpus  est classé dans une période, nous devons trouver un moyen de les classer par genre, car cette information n'était pas donnée initialement par nos sources.\\
+
+L'approche à la quelle nous avons pensé consiste à exploiter un modèle de \textbf{recherche d'information (RI)} pour calculer la similitude entre un texte et une requête,\\
+ tel que le texte correspond à un document entier de notre corpus et la requête à un lexique (champ lexical) d'un des 3 genres que nous avons choisi.\\
+ 
+ Dans l'utilisation classique des modèles de recherche d'information nous calculant la similitude d'un ensemble de document par rapport a une requête, afin de ne garder que les documents ayant la plus grande similitude.
+ 
+  Le but étant de classer un Document dans la catégorie ayant la similitude maximale avec son lexique, nous avons inversé le principe c'est-à-dire nous procédons à l'appariement de chaque document pris indépendamment des autres avec 3 requêtes, afin de garder la requête qui nous permet de maximiser la similitude. 
+
+ 
+\subsection{Modèle de Recherche d'information}
+Parmi les modèles de recherche d'information les plus connus nous pouvons énumérer : le modèle booléen , le modèle vectoriel , le modèle probabiliste , ... \\
+
+Notre choix c'est porté sur \textbf{le modèle vectoriel} pour les raisons suivantes : 
+\begin{itemize}
+	\item modèle booléen : trop rigide, ne représente pas le degré d'appartenance.
+	\item modèle vectoriel : plus souple que le modèle booléen, donne de bons résultats.
+	\item modèle probabiliste : représente bien la vrai nature du problème (basé sur les probabilités), donne de bons résultats, mais nécessite une prés-sélection de documents jugés pertinents à partir d'un échantillon et cela par un autre modèle ou un humain.
+\end{itemize}
+
+La formule de Jaccard est utilisé pour ce modèle:\\
+\begin{center}
+	%TODO : add formule vectoriel + jaccard
+	Sim($Doc_{j} , requete_{q}$) = $\dfrac{\Sigma_{i = 1}^{N_{q}} w_{ij} * w_{iq}}{\Sigma_{i = 1}^{N_{q}} w_{ij}^{2} + \Sigma_{i = 1}^{N_{q}} w_{iq}^{2} - 2* \Sigma_{i = 1}^{N_{q}} w_{ij} * w_{iq} }$
+\end{center}
+
+Avec:\\
+$N_{q}$ : le nombre de terme de la requête q.\\
+$Doc_{j}$ : le $j^{eme}$ document a classer.\\
+$requete_{q}$ : la $q^{eme}$ requête a tester, $q \in {1,2,3}$\\
+$w_{ij}$ : le poids du $i^{eme}$ terme de la requête dans le $j^{eme}$ document.\\
+$w_{iq}$ : le poids du $i^{eme}$ terme de la requête dans le $q^{eme}$ requête.\\
+
+\subsection{Récolte du lexique de chaque genre}
+Pour nos trois genres nous avons eu besoins de trois requête, chacune étant une liste de mots du lexique de ce genre.\\
+
+%TODO : remplacer les refs
+Pour cela nous avons récupéré le lexique de chaque genre (Politique, Religion, Littérature) en français[https://www.rimessolides.com/motscles.aspx?m=litt\%c3\%a9rature], que nous avons par la suite traduit en arabe en exploitant l'API de Google traduction
+
+ \textbf{googletrans}[https://pypi.org/project/googletrans/], ainsi chaque requête (lexique) est enregistré dans un fichier texte.
+
+\subsection{Application du modèle vectoriel}
+On calcule la similitude de chaque document de notre corpus avec les trois requêtes (lexiques arabes) selon la formule du modèle vectoriel donnée plus haut, nous classons chaque document selon le genre qui maximise la similitude.
+\section{Construction du Corpus DOC et du corpus XML}
+Pour notre application nous avons choisi de construire deux instances du corpus, une instance sous forme de fichiers texte et une seconde instance sous forme de fichiers XML.
+
+ Nous justifions notre choix par les raisons suivantes :
+\begin{itemize}
+	\item Permettre à l’utilisateur de naviguer plus rapidement dans le corpus.
+	\item  Gagner du temps lors de l’affichage du contenu du corpus en évitant les traitements sur les fichiers XML.
+	\item  Permettre d’utiliser le corpus en dehors des limites du projet, en effet il sera plus simple de manipuler des fichiers texte que des fichiers XML.
+\end{itemize}
+
+\subsection{Corpus au format doc}
+
+L’automatisation de l’extraction de la période ne permettra de construire des fichiers sources qui vont contenir des paires de [période x : ensemble de liens], en voici un petit aperçu pour les liens du site \textbf{alDiwan} :
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.9]{images/linksfile.png}%
+	\captionof{figure}{Structure du fichier contenant les liens organisés par periodes}\label{labelname}%
+\end{figure}
+Nous avons généré un fichier du genre pour chaque site sur lequel nous avons extrait du contenu. La génération de ces fichiers sources et bien sûr automatique mais nous préférons les inclure de base pour l’utilisateur car leur génération prend également un certain temps.
+
+À partir de là, il nous suffit de parcourir ces fichiers sources, récupérer son contenu dans un dictionnaire de la structure :
+
+\textbf{ clé : valeur ===$>$ ‘periode’:[$lien_{1}, lien_{2}, …, lien_{N}$] }
+ pour ensuite appelé les méthodes d’extraction de contenu. 
+ 
+ Comme nous avons par défaut trois genre de contenus dans notre corpus, la structure de ce dernier est de la forme : \textbf{période/genre/document.txt} comme suit :
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.84]{images/organisationperiode.png}%
+	\captionof{figure}{Organisation Periode choie dans notre cas}\label{labelname}%
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.9]{images/organisationgenre.png}%
+	\captionof{figure}{Organisation genre choisie dans notre cas}\label{labelname}%
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.9]{images/contenuperiodegenre.png}%
+	\captionof{figure}{les fichiers txt qui sont relatives à un genre et à une periode précise}\label{labelname}%
+\end{figure}
+
+ 
+
+
+
+\subsection{Corpus au format XML}
+Pour cette partie nous proposons à l'utilisateur la génération du corpus au format XML soit à partir d’une extraction de contenu sur le web ou bien, directement à partir du corpus doc générée et ce, pour lui permettre de générer un corpus XML à partir de n’importe quel source de documents texte présente localement, il est bien sûr important de mentionner que la génération à partir du corpus au format doc est beaucoup plus rapide que celle à partir du web c’est donc celle que nous recommandons à l’utilisateur. 
+
+\paragraph{NB: La structure du corpus xml est la même (période/genre/document.xml)}.\\
+
+ 
+
+La génération de ce corpus suit les étapes suivantes :
+
+\begin{itemize}
+	\item Parcours du corpus doc pour récupérer les documents texte selon leur période et selon leur genre.
+	\item   Lecture des documents, et découpage en phrases comme vu au chapitre précédent.
+	\item  Utilisation de la méthode \textbf{insert\_sent\_into\_corpus} qui permet d’initialiser un document s’il n’existe pas, d’y ajouter la période, le genre et un ensemble de phrases ce qui nous facilitera l’utilisation des exemples par la suite.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=2\textwidth]{images/corpusxml.png}%
+	\captionof{figure}{Structure du corpus en XML}\label{labelname}%
+\end{figure}
+
+
+
+
+
+
+\chapter{Stemming et POS}
+\section{Stemming}
+\subsection{Objective}
+Dans notre dictionnaire historique nous ne gardons que les stems des mots car le but n'étant pas de créer une base de données au sens classique, nous exploitant alors le stemming pour créer les entrées de notre dictionnaire mais aussi pour la recherche d'un mot dans ce dernier.\\
+\textbf{ }
+Ainsi nous évitons le stockage de tous les mots de la langues arabes et réduisant considérablement le temps d'accès aux informations recherchées.
+
+\subsection{Méthodes utilisés}
+[ jess ]
+\subsection{Exemple}
+[ jess ]
+
+\section{POS}
+\subsection{Objective}
+Dans le but de cibler les exemples les plus pertinents pour un mot recherché dans notre dictionnaire historique, nous avons introduit un module d'étiquetage (POS) pour les phrases (exemples) d'utilisation d'un mot donnée, tel que nous affichons en premier lieu les phrases (exemples) contenant le même stem que le mot recherché mais dont l'étiquette (POS) est identique à celle du mot recherché.
+
+\subsection{Méthodes utilisés}
+[ jess ]
+\subsection{Exemple}
+[ jess ]
+
+\chapter{Exploitation de dictionnaire classique}
+\section{Dictionnaire local (mode Offline)}
+Nous avons téléchargé la base de donné de l'application mobile \textbf{Al maany}, celle-ci contenant une table \textbf{WordsTable} de 119536 instances et 8 attributs qui sont:\\
+\textbf{ }\\
+\underline{id} : identificateur numérique (entier) du mot,\\
+\underline{word} : le mot concernant l'instance,\\
+\underline{explination} : la source dont est extrait l'instance,\\
+\underline{searchword} : variantes du mot de l'instance,\\
+\underline{root} : stem du mot (valeur manquante),\\
+\underline{meaning} : différents sens du mot (séparés par le caractère "$|$"),\\
+\underline{searchword\_count} : nombre de variante du mot données pour ce mot,\\
+\underline{word\_char\_count} : taille du mot de l'instance courante.\\
+
+ Nous avons exploité uniquement les attributs \textbf{Word} et \textbf{Meaning} dans la création/ remplissage de notre dictionnaire historique (XML).\\
+ Car les exemples d'utilisation sont automatiquement extrait de notre corpus.\\
+ 
+Cette base de donnée ne contenant pas les exemples d'utilisation (phrases) pour enrichir notre dictionnaire, nous avons alors eu recourt à l'accès au dictionnaire en ligne pour en récupérer d'autres exemples d'utilisation.
+
+\section{Dictionnaire en ligne (mode Online)}
+Dictionnaire en mode online:
+
+En plus de l’utilisation du dictionnaire en mode offline, nous proposons la recherche de sens des mots et d’exemples d’utilisations en mode online et ce à partir du dictionnaire en ligne \textbf{Al Maany}.
+
+Cette recherche se fait de la manière suivante :
+\begin{itemize}
+	\item Extraction du contenu de la page web du résultat d’une recherche, cela se fait en concaténant le mot recherché à l’URL \textbf{"https://www.almaany.com/ar/dict/ar-ar/"}
+	\item  Pour la liste des sens d’un mot donné, nous avons remarqué que les sens se trouvaient entre des balises de la forme \textbf{<li> <b> the word to define </b> a set of definitions mostly found between <b> and </b> and ends with </li>}, nous utilisons donc une expression régulière en conséquent pour récupérer tous les sens possible d’un mode.
+	\item Pour ce qui est des exemples d'utilisation d’un mot, nous remarquons le pattern suivant : \textbf{<div class=\"col-md-12 text-right bd-plain\">usew example</div>}
+	\item La sortie de ces deux méthodes sont sous forme d’une liste contenant les sens d’un mot, ou encore des exemples d'utilisation.
+\end{itemize}
+
+
+\chapter{Construction du dictionnaire historique XML}
+Nous avons opté pour une solution à plusieurs fichiers XML afin de réduire la taille des fichiers et de ce fait réduire le temps d'accès.\\
+
+Ainsi nous aurons 28 fichiers XML, ce qui correspond à un par lettre alphabétique, cette organisation nous sembla la meilleur solution pour rejoindre l'esprit de l'organisation des dictionnaires classique tout en ayant un nombre raisonnable de fichier XML.\\
+\textbf{ }\\
+La structure de chacun de nos fichier XML du dictionnaire se présente comme suit:\\
+
+\begin{center}
+	\includegraphics[width=1\textwidth]{images/skeletonDico.png}%
+	\captionof{figure}{squelette d'un fichier XML de notre dictionnaire historique.}\label{labelname}%
+\end{center}
+
+Chaque balise \textbf{Entry} (entrée) de notre dictionnaire est représentée par :\\
+\underline{Stem} : un stem, \\
+\underline{Valide} : un degré de validation (de 0 à 3 qui correspond au nombre de lexicographe ayant confirmé l'entrée),\\
+\underline{Supp} : le nombre de lexicographes ayant supprimé une entrée, tel que ce n'est que lorsque les 3 lexicographes supprime une entrée qu'elle est réellement supprimé du dictionnaire,\\
+\underline{Type} : la méthode d'ajout qui peux être manuelle ou automatique. \\
+
+Elle possède aussi :\\
+Une balise \textbf{Meanings} qui contient l'ensemble des balises \textbf{Meaning} cette dernière étant caractérisé par :\\
+\underline{p} : la période ou le mot avez le sens contenu dans cette balise,\\
+\underline{g} : le genre dans le quel le mot avez le sens contenu dans cette balise,\\
+
+Une balise \textbf{Examples} qui contient l'ensemble des balises \textbf{Example} cette dernière étant caractérisé par :\\
+\underline{period} : la période d'utilisation du mot courant dans les phrases référencées par les balises \textbf{Sentence} qu'il comporte.\\
+
+Enfin chaque balise \textbf{Sentence} possède les attributs suivants:\\
+\textbf{ }\\
+\underline{genre} : le genre du texte à partir du quelle la phrase est extraite,\\
+\underline{document-name} : le nom du document au quel la phrase appartient,\\
+\underline{position} : le numéro de la ligne de la phrase dans le document,\\
+\underline{pos} : (Part-Of-Speech) étiquete du mot au quel on fait référence dans cette phrase.\\
+
+
+
+
+\chapter{Statistique et mesure de d'évaluation de la performance du système}
+\section{Statistiques}
+\section{Mesure de d'évaluation de la performance du système}
+Soient les trois opérations élémentaires : \textbf{Insertion, suppression} et \textbf{modification} d'une entrée dans notre dictionnaire historique.
+
+Nous définissons des couts de chacune des opérations précédentes comme suit:\\
+Insertion $\Rightarrow$ 1\\
+Suppression $\Rightarrow$ 1\\
+Modification $\Rightarrow$ 0.5\\
+
+Nous avons pensé à évaluer notre système en utilisant le rappel et la précision de manière à les adapter au contexte de notre système, ainsi nous définissant les formules de ces deux mesures par:
+
+\begin{center}
+	$Rappel' = \frac{\text{nombre d'entrée à la création}}{\text{nombre d'entrée après les insertions du lexicographe}}$\\
+	\textbf{ }\\
+	$Pr\acute{e}cision' = \frac{\text{nombre d'entrée après les suppressions et modifications}}{\text{nombre d'entrée existantes à la création}}$
+\end{center}
+
+à travers ces deux mesures nous sommes capable d'évaluer notre système en utilisant par exemple, le \textbf{F-mesure} avec le poids $\beta$ (avec le poids car nous jugeons que la précision doit avoir un poids supérieur à celui du rappel car nous avons conscience que notre dictionnaire à besoin d'être enrichi, ce qui fait partie du but de l'application).
+
+\begin{center}
+	$ F_{\beta }={\frac {(1+\beta ^{2})\cdot ({\text{Précision'}}\cdot {\text{Rappel'}})}{(\beta ^{2}\cdot {\text{Précision'}}+{\text{Rappel'}})}}$
+\end{center}
+
+Avec:\\
+$\beta$ : le poids de la précision.\\
+Nous avons pris $\beta = 2$\\
+\textbf{ }\\
+Bien évidemment plus cette mesures se rapproche du 100\% plus nous confirmerons l'efficacité et la précision de notre système.
+
+
+
+
+
+\chapter{Outils de développement}
+blabla pour backend python avec pycharm et compgnie\\
+pour frontend pyQt \\
+liste des jar et packages utilisé : pyarabic, googletrans, ...
+
+
+\chapter{}
+\chapter*{Conclusion}
+
+\chapter*{Manuel d'utilisation}
+[jessssss mdrr]
+
+\bibliography{file}
+
+
+
+
+
+
+
+
+
+\subsubsection*{}
+\end{document}

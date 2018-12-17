@@ -1,0 +1,50 @@
+\babel@toc {english}{}
+\contentsline {chapter}{\numberline {1}}{3}
+\contentsline {section}{\numberline {1.1}Description des \IeC {\'e}tapes}{5}
+\contentsline {section}{\numberline {1.2}Sch\IeC {\'e}ma r\IeC {\'e}sumant le syst\IeC {\`e}me}{6}
+\contentsline {chapter}{\numberline {2}D\IeC {\'e}finition des p\IeC {\'e}riodes et genres}{8}
+\contentsline {section}{\numberline {2.1}Pr\IeC {\'e}sentation de la langue arabe}{8}
+\contentsline {section}{\numberline {2.2}Histoire de la langue arabe}{8}
+\contentsline {section}{\numberline {2.3}Liste des p\IeC {\'e}riodes retenues}{8}
+\contentsline {section}{\numberline {2.4}Liste des genres retenus}{8}
+\contentsline {chapter}{\numberline {3}Extraction et nettoyage de texte arabe}{9}
+\contentsline {section}{\numberline {3.1}Extraction et nettoyage \IeC {\`a} partir de lien}{9}
+\contentsline {subsection}{\numberline {3.1.1}Description de la m\IeC {\'e}thode}{9}
+\contentsline {subsection}{\numberline {3.1.2}Fonctionnement}{9}
+\contentsline {subsubsection}{Technique choisie}{9}
+\contentsline {section}{\numberline {3.2}Extraction et nettoyage \IeC {\`a} partir de PDF/text}{10}
+\contentsline {subsection}{\numberline {3.2.1}Description de la m\IeC {\'e}thode}{10}
+\contentsline {subsection}{\numberline {3.2.2}Fonctionnement}{10}
+\contentsline {chapter}{\numberline {4}D\IeC {\'e}coupage de texte arabe en phrases}{11}
+\contentsline {subsection}{\numberline {4.0.1}Description de la m\IeC {\'e}thode}{11}
+\contentsline {subsection}{\numberline {4.0.2}Fonctionnement}{11}
+\contentsline {chapter}{\numberline {5}Organisation automatique du corpus}{12}
+\contentsline {section}{\numberline {5.1}Organisation par p\IeC {\'e}riode}{12}
+\contentsline {subsection}{\numberline {5.1.1}p\IeC {\'e}riode contenue dans la source}{12}
+\contentsline {subsection}{\numberline {5.1.2}p\IeC {\'e}riode \IeC {\`a} extraire \IeC {\`a} partir de m\IeC {\'e}ta-data des textes}{12}
+\contentsline {section}{\numberline {5.2}Organisation par genre}{12}
+\contentsline {subsection}{\numberline {5.2.1}Mod\IeC {\`e}le de Recherche d'information}{13}
+\contentsline {subsection}{\numberline {5.2.2}R\IeC {\'e}colte du lexique de chaque genre}{13}
+\contentsline {subsection}{\numberline {5.2.3}Application du mod\IeC {\`e}le vectoriel}{14}
+\contentsline {section}{\numberline {5.3}Construction du Corpus DOC et du corpus XML}{14}
+\contentsline {subsection}{\numberline {5.3.1}Corpus au format doc}{14}
+\contentsline {subsection}{\numberline {5.3.2}Corpus au format XML}{17}
+\contentsline {paragraph}{NB: La structure du corpus xml est la m\IeC {\^e}me (p\IeC {\'e}riode/genre/document.xml)}{17}
+\contentsline {chapter}{\numberline {6}Stemming et POS}{19}
+\contentsline {section}{\numberline {6.1}Stemming}{19}
+\contentsline {subsection}{\numberline {6.1.1}Objective}{19}
+\contentsline {subsection}{\numberline {6.1.2}M\IeC {\'e}thodes utilis\IeC {\'e}s}{19}
+\contentsline {subsection}{\numberline {6.1.3}Exemple}{19}
+\contentsline {section}{\numberline {6.2}POS}{19}
+\contentsline {subsection}{\numberline {6.2.1}Objective}{19}
+\contentsline {subsection}{\numberline {6.2.2}M\IeC {\'e}thodes utilis\IeC {\'e}s}{19}
+\contentsline {subsection}{\numberline {6.2.3}Exemple}{20}
+\contentsline {chapter}{\numberline {7}Exploitation de dictionnaire classique}{21}
+\contentsline {section}{\numberline {7.1}Dictionnaire local (mode Offline)}{21}
+\contentsline {section}{\numberline {7.2}Dictionnaire en ligne (mode Online)}{21}
+\contentsline {chapter}{\numberline {8}Construction du dictionnaire historique XML}{23}
+\contentsline {chapter}{\numberline {9}Statistique et mesure de d'\IeC {\'e}valuation de la performance du syst\IeC {\`e}me}{25}
+\contentsline {section}{\numberline {9.1}Statistiques}{25}
+\contentsline {section}{\numberline {9.2}Mesure de d'\IeC {\'e}valuation de la performance du syst\IeC {\`e}me}{25}
+\contentsline {chapter}{\numberline {10}Outils de d\IeC {\'e}veloppement}{26}
+\contentsline {chapter}{\numberline {11}}{27}
